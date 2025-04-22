@@ -1,0 +1,1793 @@
+Only in /home/kozuenakano/temp/myactuator_rmd: .git
+Only in /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd: .vscode
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/CMakeLists.txt /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/CMakeLists.txt
+--- /home/kozuenakano/temp/myactuator_rmd/CMakeLists.txt	2025-04-22 15:42:21.620822638 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/CMakeLists.txt	2025-04-21 11:37:54.069348332 +0900
+@@ -69,13 +69,13 @@
+     myactuator_rmd
+   )
+ 
++  install(TARGETS myactuator_rmd_py
++    DESTINATION ${PYTHON_INSTALL_DIR}/${PROJECT_NAME}
++  )
+   if(ament_cmake_FOUND)
+     find_package(ament_cmake_python REQUIRED)
+     ament_python_install_package(${PROJECT_NAME})
+   endif()
+-  install(TARGETS myactuator_rmd_py
+-    DESTINATION ${PYTHON_INSTALL_DIR}/${PROJECT_NAME}
+-  )
+ endif()
+ 
+ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_constants.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_constants.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_constants.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_constants.hpp	2025-04-21 11:37:54.070348379 +0900
+@@ -16,472 +16,26 @@
+ 
+ namespace myactuator_rmd {
+ 
+-  ///< X4-series actuators
++    ///<k-teck MF-series actuators
+ 
+-  /**\class X4V2
++    /**\class MF7015V2T23
+    * \brief
+-   *    Constants for the X4 V2 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x4-1-10
++     *    Constants for the k-teck MF actuator
++     *    See http://en.lkmotor.cn/ProDetail.aspx?ProId=249
+   */
+-  class X4V2 {
++  class MF7015V2T23 {
+     public:
+-      static constexpr float reducer_ratio {10/1};
+-      static constexpr float no_load_speed {300}; // in rpm
+-      static constexpr float rated_speed {250}; // in rpm
+-      static constexpr float rated_current {1.6}; // in A
+-      static constexpr float rated_power {27}; // in W
++      static constexpr float reducer_ratio {1};
++      static constexpr float no_load_speed {805}; // in rpm
++      static constexpr float rated_speed {580}; // in rpm
++      static constexpr float rated_current {3.62}; // in A
++      static constexpr float rated_power {75}; // in W
+       static constexpr float rated_torque {1}; // in Nm
+-      static constexpr float speed_constant {12.5}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (manufacturer: 0.625) in Nm/A
+-      static constexpr float rotor_inertia {105}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-  /**\class X4V3
+-   * \brief
+-   *    Constants for the X4 V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x4-1-6
+-  */
+-  class X4V3 {
+-    public:
+-      static constexpr float reducer_ratio {6/1};
+-      static constexpr float no_load_speed {600}; // in rpm
+-      static constexpr float rated_speed {400}; // in rpm
+-      static constexpr float rated_current {3}; // in A
+-      static constexpr float rated_power {80}; // in W
+-      static constexpr float rated_torque {1.2}; // in Nm
+-      static constexpr float speed_constant {200}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (0.4, manufacturer: 0.35) in Nm/A
+-      static constexpr float rotor_inertia {200}; // in gcm2
+-  };
+-
+-  /**\class X4_3
+-   * \brief
+-   *    Constants for the X4-3 actuator
+-   *    See https://www.myactuator.com/x4-3-details
+-   *    Replacement for X4 V3
+-  */
+-  class X4_3 {
+-    public:
+-      static constexpr float reducer_ratio {6/1};
+-      static constexpr float rated_speed {200}; // in rpm
+-      static constexpr float rated_current {2}; // in A
+-      static constexpr float rated_power {30}; // in W
+-      static constexpr float rated_torque {1.5}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (0.75) in Nm/A
+-      static constexpr float rotor_inertia {1200}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-  /**\class X4_24
+-   * \brief
+-   *    Constants for the X4-24 actuator
+-   *    See https://www.myactuator.com/x4-24-details
+-  */
+-  class X4_24 {
+-    public:
+-      static constexpr float reducer_ratio {36/1};
+-      static constexpr float rated_speed {100}; // in rpm
+-      static constexpr float rated_current {3.5}; // in A
+-      static constexpr float rated_power {150}; // in W
+-      static constexpr float rated_torque {9}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (2.57) in Nm/A
+-      static constexpr float rotor_inertia {6800}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-
+-  ///< X6-series actuators
+-
+-  /**\class X6V2
+-   * \brief
+-   *    Constants for the X6 V2 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x6
+-  */
+-  class X6V2 {
+-    public:
+-      static constexpr float reducer_ratio {6/1};
+-      static constexpr float no_load_speed {240}; // in rpm (@24V)
+-      static constexpr float rated_speed {190}; // in rpm
+-      static constexpr float rated_current {4}; // in A
+-      static constexpr float rated_power {70}; // in W
+-      static constexpr float rated_torque {3.5}; // in Nm
+-      static constexpr float speed_constant {60}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (manufacturer: 0.88) in Nm/A
+-      static constexpr float rotor_inertia {800}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-  /**\class X6S2V2
+-   * \brief
+-   *    Constants for the X6-S2 V2 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x6-s2
+-  */
+-  class X6S2V2 {
+-    public:
+-      static constexpr float reducer_ratio {36/1};
+-      static constexpr float no_load_speed {90}; // in rpm (@24V)
+-      static constexpr float rated_speed {70}; // in rpm
+-      static constexpr float rated_current {2.6}; // in A
+-      static constexpr float rated_power {132}; // in W
+-      static constexpr float rated_torque {18}; // in Nm
+-      static constexpr float speed_constant {135}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (manufacturer: 6.92) in Nm/A
+-      static constexpr float rotor_inertia {800}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-  /**\class X6V3
+-   * \brief
+-   *    Constants for the X6 V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x6-1-8
+-  */
+-  class X6V3 {
+-    public:
+-      static constexpr float reducer_ratio {8/1};
+-      static constexpr float no_load_speed {360}; // in rpm
+-      static constexpr float rated_speed {310}; // in rpm
+-      static constexpr float rated_current {3.6}; // in A
+-      static constexpr float rated_power {135}; // in W
+-      static constexpr float rated_torque {4.5}; // in Nm
+-      static constexpr float speed_constant {62}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (1.25, manufacturer: 0.17) in Nm/A
+-      static constexpr float rotor_inertia {850}; // in gcm2
+-  };
+-
+-  /**\class X6_7
+-   * \brief
+-   *    Constants for the X6-7 actuator
+-   *    See https://www.myactuator.com/x6-7-details
+-   *    Replacement for X6 V2
+-  */
+-  class X6_7 {
+-    public:
+-      static constexpr float reducer_ratio {6/1};
+-      static constexpr float rated_speed {400}; // in rpm
+-      static constexpr float rated_current {4}; // in A
+-      static constexpr float rated_power {150}; // in W
+-      static constexpr float rated_torque {3.5}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (0.875) in Nm/A
+-      static constexpr float rotor_inertia {4800}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-  /**\class X6_8
+-   * \brief
+-   *    Constants for the X6-8 actuator
+-   *    See https://www.myactuator.com/x6-8-details
+-   *    Replacement for X6 V3
+-  */
+-  class X6_8 {
+-    public:
+-      static constexpr float reducer_ratio {8/1};
+-      static constexpr float rated_speed {310}; // in rpm
+-      static constexpr float rated_current {3.6}; // in A
+-      static constexpr float rated_power {135}; // in W
+-      static constexpr float rated_torque {4.5}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (1.25) in Nm/A
+-      static constexpr float rotor_inertia {6800}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-  /**\class X6_40
+-   * \brief
+-   *    Constants for the X6-40 actuator
+-   *    See https://www.myactuator.com/x6-40-details
+-   *    Replacement for X6-S2 V2
+-  */
+-  class X6_40 {
+-    public:
+-      static constexpr float reducer_ratio {36/1};
+-      static constexpr float rated_speed {90}; // in rpm
+-      static constexpr float rated_current {5.2}; // in A
+-      static constexpr float rated_power {170}; // in W
+-      static constexpr float rated_torque {18}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (3.46) in Nm/A
+-      static constexpr float rotor_inertia {28800}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {14};
+-  };
+-
+-
+-  ///< X8-series actuators
+-
+-  /**\class X8V2
+-   * \brief
+-   *    Constants for the X8 V2 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x8-1-9
+-  */
+-  class X8V2 {
+-    public:
+-      static constexpr float reducer_ratio {9/1};
+-      static constexpr float no_load_speed {215}; // in rpm (@48V)
+-      static constexpr float rated_speed {170}; // in rpm
+-      static constexpr float rated_current {4.3}; // in A
+-      static constexpr float rated_power {160}; // in W
+-      static constexpr float rated_torque {9}; // in Nm
+-      static constexpr float speed_constant {40}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (manufacturer: 2.09) in Nm/A
+-      static constexpr float rotor_inertia {2600}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
+-  };
+-
+-  /**\class X8ProV2
+-   * \brief
+-   *    Constants for the X8 Pro V2 actuator
+-   *    See https://www.myactuator.com/product-page/x8-pro-1-9
+-  */
+-  class X8ProV2 {
+-    public:
+-      static constexpr float reducer_ratio {9/1};
+-      static constexpr float no_load_speed {160}; // in rpm (@48V)
+-      static constexpr float rated_speed {122}; // in rpm
+-      static constexpr float rated_current {5}; // in A
+-      static constexpr float rated_power {166}; // in W
+-      static constexpr float rated_torque {13}; // in Nm
+-      static constexpr float speed_constant {30}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (manufacturer: 2.6) in Nm/A
+-      static constexpr float rotor_inertia {3400}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {20};
+-  };
+-
+-  /**\class X8S2V3
+-   * \brief
+-   *    Constants for the X8-S2 V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x8-s2-1-36
+-  */
+-  class X8S2V3 {
+-    public:
+-      static constexpr float reducer_ratio {36/1};
+-      static constexpr float no_load_speed {46}; // in rpm
+-      static constexpr float rated_speed {40}; // in rpm
+-      static constexpr float rated_current {3.2}; // in A
+-      static constexpr float rated_power {110}; // in W
+-      static constexpr float rated_torque {25}; // in Nm
+-      static constexpr float speed_constant {33}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (7.81, manufacturer: 0.30) in Nm/A
+-      static constexpr float rotor_inertia {2670}; // in gcm2
+-  };
+-
+-  /**\class X8HV3
+-   * \brief
+-   *    Constants for the X8-H V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x8
+-  */
+-  class X8HV3 {
+-    public:
+-      static constexpr float reducer_ratio {6.2/1};
+-      static constexpr float no_load_speed {260}; // in rpm
+-      static constexpr float rated_speed {190}; // in rpm
+-      static constexpr float rated_current {3.5}; // in A
+-      static constexpr float rated_power {120}; // in W
+-      static constexpr float rated_torque {6}; // in Nm
+-      static constexpr float speed_constant {33}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (1.71, manufacturer: 0.30) in Nm/A
+-      static constexpr float rotor_inertia {2670}; // in gcm2
+-  };
+-
+-  /**\class X8ProHV3
+-   * \brief
+-   *    Constants for the X8-Pro-H V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x8-pro
+-  */
+-  class X8ProHV3 {
+-    public:
+-      static constexpr float reducer_ratio {6.2/1};
+-      static constexpr float no_load_speed {220}; // in rpm
+-      static constexpr float rated_speed {160}; // in rpm
+-      static constexpr float rated_current {3.75}; // in A
+-      static constexpr float rated_power {135}; // in W
+-      static constexpr float rated_torque {8}; // in Nm
+-      static constexpr float speed_constant {30}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (2.13, manufacturer: 0.29) in Nm/A
+-      static constexpr float rotor_inertia {3400}; // in gcm2
+-  };
+-
+-  /**\class X8_20
+-   * \brief
+-   *    Constants for the X8-20 actuator
+-   *    See https://www.myactuator.com/x8-20-details
+-   *    Replacement for X8-Pro-H V3
+-  */
+-  class X8_20 {
+-    public:
+-      static constexpr float reducer_ratio {6/1};
+-      static constexpr float rated_speed {190}; // in rpm
+-      static constexpr float rated_current {5.2}; // in A
+-      static constexpr float rated_power {200}; // in W
+-      static constexpr float rated_torque {10}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (1.92) in Nm/A
+-      static constexpr float rotor_inertia {20000}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {20};
+-  };
+-
+-  /**\class X8_25
+-   * \brief
+-   *    Constants for the X8-25 actuator
+-   *    See https://www.myactuator.com/x8-25-details
+-   *   Replacement for X8-Pro V2
+-  */
+-  class X8_25 {
+-    public:
+-      static constexpr float reducer_ratio {9/1};
+-      static constexpr float rated_speed {110}; // in rpm
+-      static constexpr float rated_current {3.2}; // in A
+-      static constexpr float rated_power {125}; // in W
+-      static constexpr float rated_torque {10}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (3.13) in Nm/A
+-      static constexpr float rotor_inertia {30600}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
+-  };
+-
+-  /**\class X8_60
+-   * \brief
+-   *    Constants for the X8-60 actuator
+-   *    See https://www.myactuator.com/x8-60-details
+-   *    Replacement for X8-S2 V3
+-  */
+-  class X8_60 {
+-    public:
+-      static constexpr float reducer_ratio {36/1};
+-      static constexpr float rated_speed {40}; // in rpm
+-      static constexpr float rated_current {4}; // in A
+-      static constexpr float rated_power {130}; // in W
+-      static constexpr float rated_torque {30}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (7.5) in Nm/A
+-      static constexpr float rotor_inertia {96000}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {20};
+-  };
+-
+-  /**\class X8_90
+-   * \brief
+-   *    Constants for the X8-90 actuator
+-   *    See https://www.myactuator.com/x8-90-details
+-  */
+-  class X8_90 {
+-    public:
+-      static constexpr float reducer_ratio {18/1};
+-      static constexpr float rated_speed {130}; // in rpm
+-      static constexpr float rated_current {10}; // in A
+-      static constexpr float rated_power {500}; // in W
+-      static constexpr float rated_torque {25}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (2.5) in Nm/A
+-      static constexpr float rotor_inertia {26000}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
+-  };
+-
+-
+-  ///< X10-series actuators
+-
+-  /**\class X10V3
+-   * \brief
+-   *    Constants for the X10 V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x10
+-  */
+-  class X10V3 {
+-    public:
+-      static constexpr float reducer_ratio {7/1};
+-      static constexpr float no_load_speed {190}; // in rpm
+-      static constexpr float rated_speed {170}; // in rpm
+-      static constexpr float rated_current {5.3}; // in A
+-      static constexpr float rated_power {215}; // in W
+-      static constexpr float rated_torque {12}; // in Nm
+-      static constexpr float speed_constant {30}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (2.26, manufacturer: 0.32) in Nm/A
+-      static constexpr float rotor_inertia {5675}; // in gcm2
+-  };
+-
+-  /**\class X10S2V3
+-   * \brief
+-   *    Constants for the X10-S2 V3 actuator
+-   *    See https://www.myactuator.com/product-page/rmd-x10-s2-1-35
+-  */
+-  class X10S2V3 {
+-    public:
+-      static constexpr float reducer_ratio {35/1};
+-      static constexpr float no_load_speed {55}; // in rpm
+-      static constexpr float rated_speed {50}; // in rpm
+-      static constexpr float rated_current {6.7}; // in A
+-      static constexpr float rated_power {265}; // in W
+-      static constexpr float rated_torque {50}; // in Nm
+-      static constexpr float speed_constant {30}; // in rpm/V
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (7.46, manufacturer: 0.32) in Nm/A
+-      static constexpr float rotor_inertia {5675}; // in gcm2
+-  };
+-
+-  /**\class X10_40
+-   * \brief
+-   *    Constants for the X10-40 actuator
+-   *    See https://www.myactuator.com/x10-40-details
+-   *    Replacement for X10 V3
+-  */
+-  class X10_40 {
+-    public:
+-      static constexpr float reducer_ratio {7/1};
+-      static constexpr float rated_speed {165}; // in rpm
+-      static constexpr float rated_current {6.5}; // in A
+-      static constexpr float rated_power {265}; // in W
+-      static constexpr float rated_torque {15}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (2.31) in Nm/A
+-      static constexpr float rotor_inertia {39700}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
+-  };
+-
+-  /**\class X10_100
+-   * \brief
+-   *    Constants for the X10-100 actuator
+-   *    See https://www.myactuator.com/x10-100-details
+-   *    Replacement for X10-S2 V3
+-  */
+-  class X10_100 {
+-    public:
+-      static constexpr float reducer_ratio {35/1};
+-      static constexpr float rated_speed {50}; // in rpm
+-      static constexpr float rated_current {6.7}; // in A
+-      static constexpr float rated_power {265}; // in W
+-      static constexpr float rated_torque {50}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (7.46) in Nm/A
+-      static constexpr float rotor_inertia {198600}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
+-  };
+-
+-
+-  ///< X12-series actuators
+-
+-  /**\class X12_150
+-   * \brief
+-   *    Constants for the X12-150 actuator
+-   *    See https://www.myactuator.com/x12-150-details
+-  */
+-  class X12_150 {
+-    public:
+-      static constexpr float reducer_ratio {12/1};
+-      static constexpr float rated_speed {100}; // in rpm
+-      static constexpr float rated_current {15}; // in A
+-      static constexpr float rated_power {780}; // in W
+-      static constexpr float rated_torque {50}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (3.33) in Nm/A
+-      static constexpr float rotor_inertia {59000}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
+-  };
+-
+-
+-  ///< X15-series actuators
+-
+-  /**\class X15_400
+-   * \brief
+-   *    Constants for the X15-400 actuator
+-   *    See https://www.myactuator.com/x15-400-details
+-  */
+-  class X15_400 {
+-    public:
+-      static constexpr float reducer_ratio {11.4/1};
+-      static constexpr float rated_speed {80}; // in rpm
+-      static constexpr float rated_current {23}; // in A
+-      static constexpr float rated_power {1500}; // in W
+-      static constexpr float rated_torque {130}; // in Nm
+-      static constexpr float torque_constant {rated_torque/rated_current}; // (5.65) in Nm/A
+-      static constexpr float rotor_inertia {175000}; // in gcm2
+-      static constexpr std::int16_t number_of_pole_pairs {21};
++      static constexpr float speed_constant {24.2}; // in rpm/V
++      static constexpr float torque_constant {0.28}; // (manufacturer: 0.625) in Nm/A
++      static constexpr float rotor_inertia {933}; // in gcm2
++      static constexpr std::int16_t number_of_pole_pairs {28};
++      static constexpr float current_constant {0.00805}; //(|-16A|+|16A|) / (|-2048|+|2048|) = 0.00805A/LSB
+   };
+ 
+ }
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_interface.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_interface.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_interface.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_interface.hpp	2025-04-21 11:37:54.070348379 +0900
+@@ -59,15 +59,6 @@
+       [[nodiscard]]
+       std::int32_t getAcceleration();
+ 
+-      /**\fn getCanId
+-       * \brief
+-       *    Get the CAN ID of the device
+-       * 
+-       * \return
+-       *    The CAN ID of the device starting at 0x240
+-      */
+-      [[nodiscard]]
+-      std::uint16_t getCanId();
+ 
+       /**\fn getControllerGains
+        * \brief
+@@ -79,35 +70,6 @@
+       [[nodiscard]]
+       Gains getControllerGains();
+ 
+-      /**\fn getControlMode
+-       * \brief
+-       *    Reads the currently used control mode
+-       * 
+-       * \return
+-       *    The currently used control mode
+-      */
+-      [[nodiscard]]
+-      ControlMode getControlMode();
+-
+-      /**\fn getMotorModel
+-       * \brief
+-       *    Reads the motor model currently in use by the actuator
+-       * 
+-       * \return
+-       *    The motor model string currently in use by the actuator, e.g. 'X8S2V10'
+-      */
+-      [[nodiscard]]
+-      std::string getMotorModel();
+-
+-      /**\fn getMotorPower
+-       * \brief
+-       *    Reads the current motor power consumption in Watt
+-       * 
+-       * \return
+-       *    The current motor power consumption in Watt with a resolution of 0.1
+-      */
+-      [[nodiscard]]
+-      float getMotorPower();
+ 
+       /**\fn getMotorStatus1
+        * \brief
+@@ -127,7 +89,7 @@
+        *    The motor status 2 containing current, speed and position
+       */
+       [[nodiscard]]
+-      MotorStatus2 getMotorStatus2();
++      MotorStatus2 getMotorStatus2(/*float const current_constant*/);
+ 
+       /**\fn getMotorStatus3
+        * \brief
+@@ -179,15 +141,6 @@
+       [[nodiscard]]
+       std::int32_t getMultiTurnEncoderZeroOffset();
+ 
+-      /**\fn getRuntime
+-       * \brief
+-       *    Reads the uptime of the actuator in milliseconds
+-       * 
+-       * \return
+-       *    The uptime of the actuator in milliseconds
+-      */
+-      [[nodiscard]]
+-      std::chrono::milliseconds getRuntime();
+ 
+       /**\fn getSingleTurnAngle
+        * \brief
+@@ -211,33 +164,6 @@
+       [[nodiscard]]
+       std::int16_t getSingleTurnEncoderPosition();
+ 
+-      /**\fn getVersionDate
+-       * \brief
+-       *    Reads the version date of the actuator firmware
+-       * 
+-       * \return
+-       *    The version date of the firmware on the actuator, e.g. '20220206'
+-      */
+-      [[nodiscard]]
+-      std::uint32_t getVersionDate();
+-
+-      /**\fn lockBrake
+-       * \brief
+-       *    Close the holding brake. The motor won't be able to turn anymore.
+-      */
+-      void lockBrake();
+-
+-      /**\fn releaseBrake
+-       * \brief
+-       *    Open the holding brake leaving the motor in a movable state
+-      */
+-      void releaseBrake();
+-
+-      /**\fn reset
+-       * \brief
+-       *    Reset the actuator
+-      */
+-      void reset();
+ 
+       /**\fn sendCurrentSetpoint
+        * \brief
+@@ -248,7 +174,7 @@
+        * \return
+        *    Feedback control message containing actuator position, velocity, torque and temperature
+       */
+-      Feedback sendCurrentSetpoint(float const current);
++      Feedback sendCurrentSetpoint(float const current, float const current_constant);
+ 
+       /**\fn sendPositionAbsoluteSetpoint
+        * \brief
+@@ -261,7 +187,7 @@
+        * \return
+        *    Feedback control message containing actuator position, velocity, torque and temperature
+       */
+-      Feedback sendPositionAbsoluteSetpoint(float const position, float const max_speed = 500.0);
++      Feedback sendPositionAbsoluteSetpoint(float const position, float const max_speed = 500.0 ,float const current_constant = 1);
+ 
+       /**\fn sendTorqueSetpoint
+        * \brief
+@@ -275,7 +201,7 @@
+        * \return
+        *    Feedback control message containing actuator position, velocity, torque and temperature
+       */
+-      Feedback sendTorqueSetpoint(float const torque, float const torque_constant);
++      Feedback sendTorqueSetpoint(float const torque, float const torque_constant, float const current_constant);
+ 
+       /**\fn sendVelocitySetpoint
+        * \brief
+@@ -286,7 +212,7 @@
+        * \return
+        *    Feedback control message containing actuator position, velocity, torque and temperature
+       */
+-      Feedback sendVelocitySetpoint(float const speed);
++      Feedback sendVelocitySetpoint(float const speed, float const current_constant);
+ 
+       /**\fn setAcceleration
+        * \brief
+@@ -301,23 +227,6 @@
+       */
+       void setAcceleration(std::uint32_t const acceleration, AccelerationType const mode);
+ 
+-      /**\fn setCanBaudRate
+-       * \brief
+-       *    Set the communication Baud rate for CAN bus
+-       * 
+-       * \param[in] baud_rate
+-       *    Communication Baud rate that the actuator should operator with
+-      */
+-      void setCanBaudRate(CanBaudRate const baud_rate);
+-
+-      /**\fn setCanId
+-       * \brief
+-       *    Set the CAN ID of the device
+-       * 
+-       * \param[in] can_id
+-       *    The CAN ID of the device in the range [1, 32]
+-      */
+-      void setCanId(std::uint16_t const can_id);
+ 
+       /**\fn setCurrentPositionAsEncoderZero
+        * \brief
+@@ -339,7 +248,7 @@
+        * \param[in] encoder_offset
+        *    Encoder offset that should be set as zero
+       */
+-      void setEncoderZero(std::int32_t const encoder_offset);
++      void setEncoderZero(std::int16_t const encoder_offset);
+ 
+       /**\fn setControllerGains
+        * \brief
+@@ -354,15 +263,6 @@
+       */
+       Gains setControllerGains(Gains const& gains, bool const is_persistent = false);
+ 
+-      /**\fn setTimeout
+-       * \brief
+-       *    Set the communication interruption protection time setting. The break will be triggered if the communication
+-       *    is interrupted for longer than the set time. The value 0 disables this feature.
+-       * 
+-       * \param[in] timeout
+-       *    The desired interruption protection time, 0 in case it should be disabled
+-      */
+-      void setTimeout(std::chrono::milliseconds const& timeout);
+ 
+       /**\fn shutdownMotor
+        * \brief
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_state/error_code.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_state/error_code.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_state/error_code.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_state/error_code.hpp	2025-04-21 11:37:54.070348379 +0900
+@@ -19,19 +19,10 @@
+    * \brief
+    *    Strongly typed enum for all known actuator error codes
+   */
+-  enum class ErrorCode: std::uint16_t {
+-    NO_ERROR = 0x0000,
+-    MOTOR_STALL = 0x0002,
+-    LOW_VOLTAGE = 0x0004,
+-    OVERVOLTAGE = 0x0008,
+-    OVERCURRENT = 0x0010,
+-    POWER_OVERRUN = 0x0040,
+-    SPEEDING = 0x0100,
+-    UNSPECIFIED_1 = 0x0200, // There is no error string specified for the following three codes
+-    UNSPECIFIED_2 = 0x0400,
+-    UNSPECIFIED_3 = 0x0800,
+-    OVERTEMPERATURE = 0x1000,
+-    ENCODER_CALIBRATION_ERROR = 0x2000
++  enum class ErrorCode: std::uint8_t {
++    NO_ERROR = 0x00,
++    LOW_VOLTAGE = 0x01,
++    OVERTEMPERATURE = 0x08
+   };
+ 
+ }
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_1.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_1.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_1.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_1.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -34,7 +34,7 @@
+        * \param[in] error_code_
+        *    The error code
+       */
+-      constexpr MotorStatus1(int const temperature_ = 0, bool const is_brake_released_ = false, 
++      constexpr MotorStatus1(int const temperature_ = 0, /*bool const is_brake_released_ = false,*/ 
+                              float const voltage_ = 0.0f, ErrorCode const error_code_ = ErrorCode::NO_ERROR) noexcept;
+       MotorStatus1(MotorStatus1 const&) = default;
+       MotorStatus1& operator = (MotorStatus1 const&) = default;
+@@ -42,14 +42,14 @@
+       MotorStatus1& operator = (MotorStatus1&&) = default;
+ 
+       int temperature;
+-      bool is_brake_released;
++      //bool is_brake_released;
+       float voltage;
+       ErrorCode error_code;
+   };
+ 
+-  constexpr MotorStatus1::MotorStatus1(int const temperature_, bool const is_brake_released_, 
++  constexpr MotorStatus1::MotorStatus1(int const temperature_, /*bool const is_brake_released_,*/ 
+                                        float const voltage_, ErrorCode const error_code_) noexcept
+-  : temperature{temperature_}, is_brake_released{is_brake_released_}, voltage{voltage_}, error_code{error_code_} {
++  : temperature{temperature_},/* is_brake_released{is_brake_released_},*/ voltage{voltage_}, error_code{error_code_} {
+     return;
+   }
+ 
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_2.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_2.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_2.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/actuator_state/motor_status_2.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -32,7 +32,7 @@
+        * \param[in] shaft_angle_
+        *    The output shaft angle in degrees with a resolution of 1 deg and a maximum range of 32767
+       */
+-      constexpr MotorStatus2(int const temperature_ = 0, float const current_ = 0.0f, float const shaft_speed_ = 0.0f, float const shaft_angle_ = 0.0f) noexcept;
++      constexpr MotorStatus2(int const temperature_ = 0, float const current_ = 0.0f, float const shaft_speed_ = 0.0f, float const shaft_encorder_ = 0.0f) noexcept;
+       MotorStatus2(MotorStatus2 const&) = default;
+       MotorStatus2& operator = (MotorStatus2 const&) = default;
+       MotorStatus2(MotorStatus2&&) = default;
+@@ -41,11 +41,11 @@
+       int temperature;
+       float current;
+       float shaft_speed;
+-      float shaft_angle;
++      float shaft_encorder;
+   };
+ 
+-  constexpr MotorStatus2::MotorStatus2(int const temperature_, float const current_, float const shaft_speed_, float const shaft_angle_) noexcept
+-  : temperature{temperature_}, current{current_}, shaft_speed{shaft_speed_}, shaft_angle{shaft_angle_} {
++  constexpr MotorStatus2::MotorStatus2(int const temperature_, float const current_, float const shaft_speed_, float const shaft_encorder_) noexcept
++  : temperature{temperature_}, current{current_}, shaft_speed{shaft_speed_}, shaft_encorder{shaft_encorder_} {
+     return;
+   }
+ 
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/driver/can_address_offset.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/driver/can_address_offset.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/driver/can_address_offset.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/driver/can_address_offset.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -22,7 +22,9 @@
+   class CanAddressOffset {
+     public:
+       inline static constexpr std::uint32_t request {0x140};
+-      inline static constexpr std::uint32_t response {0x240};
++      //inline static constexpr std::uint32_t response {0x240};
++      //TODO:
++      inline static constexpr std::uint32_t response {0x140};
+   };
+ 
+ }
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/io.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/io.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/io.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/io.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -88,33 +88,12 @@
+       case ErrorCode::NO_ERROR:
+         os << " (no error)";
+         break;
+-      case ErrorCode::MOTOR_STALL:
+-        os << " (motor stall)";
+-        break;
+       case ErrorCode::LOW_VOLTAGE:
+         os << " (low voltage)";
+         break;
+-      case ErrorCode::OVERVOLTAGE:
+-        os << " (overvoltage)";
+-        break;
+-      case ErrorCode::OVERCURRENT:
+-        os << " (overcurrent)";
+-        break;
+-      case ErrorCode::POWER_OVERRUN:
+-        os << " (power overrun)";
+-        break;
+-      case ErrorCode::SPEEDING:
+-        os << " (speeding)";
+-        break;
+-      case ErrorCode::UNSPECIFIED_1: case ErrorCode::UNSPECIFIED_2: case ErrorCode::UNSPECIFIED_3:
+-        os << " (unspecified error)";
+-        break;
+       case ErrorCode::OVERTEMPERATURE:
+         os << " (overtemperature)";
+         break;
+-      case ErrorCode::ENCODER_CALIBRATION_ERROR:
+-        os << " (encoder calibration error)";
+-        break;
+       default:
+         os << " (unknown error)";
+     }
+@@ -132,14 +111,14 @@
+   }
+ 
+   inline std::ostream& operator << (std::ostream& os, MotorStatus1 const& motor_status) noexcept {
+-    os << "temperature: " << motor_status.temperature << ", brake released: " << std::boolalpha << motor_status.is_brake_released << 
++    os << "temperature: " << motor_status.temperature << 
+           ", voltage: " << motor_status.voltage << ", error code: " << motor_status.error_code;
+     return os;
+   }
+ 
+   inline std::ostream& operator << (std::ostream& os, MotorStatus2 const& motor_status) noexcept {
+     os << "temperature: " << motor_status.temperature << ", current: " << motor_status.current <<
+-          ", shaft speed: " << motor_status.shaft_speed << ", shaft angle: " << motor_status.shaft_angle;
++          ", shaft speed: " << motor_status.shaft_speed << ", shaft angle: " << motor_status.shaft_encorder;
+     return os;
+   }
+ 
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/protocol/command_type.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/protocol/command_type.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/protocol/command_type.hpp	2025-04-22 15:42:21.621822656 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/protocol/command_type.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -23,13 +23,10 @@
+     READ_PID_PARAMETERS = 0x30,
+     WRITE_PID_PARAMETERS_TO_RAM = 0x31,
+     WRITE_PID_PARAMETERS_TO_ROM = 0x32,
+-    READ_ACCELERATION = 0x42,
+-    WRITE_ACCELERATION_TO_RAM_AND_ROM = 0x43,
+-    READ_MULTI_TURN_ENCODER_POSITION = 0x60,
+-    READ_MULTI_TURN_ENCODER_ORIGINAL_POSITION = 0x61,
+-    READ_MULTI_TURN_ENCODER_ZERO_OFFSET = 0x62,
+-    WRITE_ENCODER_MULTI_TURN_VALUE_TO_ROM_AS_ZERO = 0x63,
+-    WRITE_CURRENT_MULTI_TURN_POSITION_TO_ROM_AS_ZERO = 0x64,
++    READ_ACCELERATION = 0x33,
++    WRITE_ACCELERATION_TO_RAM = 0x34,
++    WRITE_ENCODER_MULTI_TURN_VALUE_TO_ROM_AS_ZERO = 0x91,
++    WRITE_CURRENT_MULTI_TURN_POSITION_TO_ROM_AS_ZERO = 0x19,
+     READ_SINGLE_TURN_ENCODER = 0x90,
+     READ_MULTI_TURN_ANGLE = 0x92,
+     READ_SINGLE_TURN_ANGLE = 0x94,
+@@ -43,18 +40,6 @@
+     ABSOLUTE_POSITION_CLOSED_LOOP_CONTROL = 0xA4,
+     // SINGLE_TURN_POSITION_CONTROL = 0xA6,
+     // INCREMENTAL_POSITION_CLOSED_LOOP_CONTROL = 0xA8,
+-    READ_SYSTEM_OPERATING_MODE = 0x70,
+-    READ_MOTOR_POWER = 0x71,
+-    RESET_SYSTEM = 0x76,
+-    RELEASE_BRAKE = 0x77,
+-    LOCK_BRAKE = 0x78,
+-    READ_SYSTEM_RUNTIME = 0xB1,
+-    READ_SYSTEM_SOFTWARE_VERSION_DATE = 0xB2,
+-    COMMUNICATION_INTERRUPTION_PROTECTION_TIME_SETTING = 0xB3,
+-    COMMUNICATION_BAUD_RATE_SETTING = 0xB4,
+-    READ_MOTOR_MODEL = 0xB5,
+-    // FUNCTION_CONTROL = 0x20,
+-    CAN_ID_SETTING = 0x79
+   };
+ 
+   // Symmetric comparison operators
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/protocol/requests.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/protocol/requests.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/protocol/requests.hpp	2025-04-22 15:42:21.622822674 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/protocol/requests.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -24,94 +24,21 @@
+   
+   using GetAccelerationRequest = SingleMotorRequest<CommandType::READ_ACCELERATION>;
+   using GetControllerGainsRequest = SingleMotorRequest<CommandType::READ_PID_PARAMETERS>;
+-  using GetControlModeRequest = SingleMotorRequest<CommandType::READ_SYSTEM_OPERATING_MODE>;
+-  using GetMotorModelRequest =  SingleMotorRequest<CommandType::READ_MOTOR_MODEL>;
+-  using GetMotorPowerRequest =  SingleMotorRequest<CommandType::READ_MOTOR_POWER>;
+   using GetMotorStatus1Request = SingleMotorRequest<CommandType::READ_MOTOR_STATUS_1_AND_ERROR_FLAG>;
+   using GetMotorStatus2Request =  SingleMotorRequest<CommandType::READ_MOTOR_STATUS_2>;
+   using GetMotorStatus3Request = SingleMotorRequest<CommandType::READ_MOTOR_STATUS_3>;
+   using GetMultiTurnAngleRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ANGLE>;
+-  using GetMultiTurnEncoderPositionRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ENCODER_POSITION>;
+-  using GetMultiTurnEncoderOriginalPositionRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ENCODER_ORIGINAL_POSITION>;
+-  using GetMultiTurnEncoderZeroOffsetRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ENCODER_ZERO_OFFSET>;
+   using GetSingleTurnAngleRequest = SingleMotorRequest<CommandType::READ_SINGLE_TURN_ANGLE>;
+   using GetSingleTurnEncoderPositionRequest = SingleMotorRequest<CommandType::READ_SINGLE_TURN_ENCODER>;
+-  using GetSystemRuntimeRequest = SingleMotorRequest<CommandType::READ_SYSTEM_RUNTIME>;
+-  using GetVersionDateRequest = SingleMotorRequest<CommandType::READ_SYSTEM_SOFTWARE_VERSION_DATE>;
+-  using LockBrakeRequest = SingleMotorRequest<CommandType::LOCK_BRAKE>;
+-  using ReleaseBrakeRequest = SingleMotorRequest<CommandType::RELEASE_BRAKE>;
+-  using ResetRequest = SingleMotorRequest<CommandType::RESET_SYSTEM>;
+   using SetCurrentPositionAsEncoderZeroRequest = SingleMotorRequest<CommandType::WRITE_CURRENT_MULTI_TURN_POSITION_TO_ROM_AS_ZERO>;
+ 
+-  /**\class CanIdRequest
+-   * \brief
+-   *    Request for getting/setting the CAN ID of the actuator
+-  */
+-  class CanIdRequest: public SingleMotorRequest<CommandType::CAN_ID_SETTING> {
+-    public:
+-      using SingleMotorRequest::SingleMotorRequest;
+-
+-      /**\fn isWrite
+-       * \brief
+-       *    Check if the can request reads or writes the given CAN ID
+-       * 
+-       * \return
+-       *    True in case this is a write command, false in case it is a read command
+-      */
+-      [[nodiscard]]
+-      bool isWrite() const noexcept;
+ 
+-    protected:
+-      CanIdRequest() = default;
+-      CanIdRequest(CanIdRequest const&) = default;
+-      CanIdRequest& operator = (CanIdRequest const&) = default;
+-      CanIdRequest(CanIdRequest&&) = default;
+-      CanIdRequest& operator = (CanIdRequest&&) = default;
+-  };
+-
+-  /**\class GetCanIdRequest
+-   * \brief
+-   *    Request for getting the CAN ID of the actuator
+-  */
+-  class GetCanIdRequest: public CanIdRequest {
+-    public:
+-      GetCanIdRequest();
+-      GetCanIdRequest(GetCanIdRequest const&) = default;
+-      GetCanIdRequest& operator = (GetCanIdRequest const&) = default;
+-      GetCanIdRequest(GetCanIdRequest&&) = default;
+-      GetCanIdRequest& operator = (GetCanIdRequest&&) = default;
+-      using CanIdRequest::CanIdRequest;
+-  };
+-
+-  /**\class SetCanIdRequest
+-   * \brief
+-   *    Request for setting the CAN ID of the actuator
+-  */
+-  class SetCanIdRequest: public CanIdRequest {
+-    public:
+-      SetCanIdRequest(std::uint16_t const can_id);
+-      SetCanIdRequest(SetCanIdRequest const&) = default;
+-      SetCanIdRequest& operator = (SetCanIdRequest const&) = default;
+-      SetCanIdRequest(SetCanIdRequest&&) = default;
+-      SetCanIdRequest& operator = (SetCanIdRequest&&) = default;
+-      using CanIdRequest::CanIdRequest;
+-
+-      /**\fn getCanId
+-       * \brief
+-       *    Get the CAN ID of the actuator
+-       * 
+-       * \return
+-       *    The CAN ID of the actuator [1, 32]
+-      */
+-      [[nodiscard]]
+-      std::uint16_t getCanId() const noexcept;
+-  };
+ 
+   /**\class SetAccelerationRequest
+    * \brief
+    *    Request for setting the maximum acceleration/deceleration of the actuator
+   */
+-  class SetAccelerationRequest: public SingleMotorRequest<CommandType::WRITE_ACCELERATION_TO_RAM_AND_ROM> {
++  class SetAccelerationRequest: public SingleMotorRequest<CommandType::WRITE_ACCELERATION_TO_RAM> {
+     public:
+       /**\fn SetAccelerationRequest
+        * \brief
+@@ -151,37 +78,13 @@
+       AccelerationType getMode() const noexcept;
+   };
+ 
+-  /**\class SetCanBaudRateRequest
+-   * \brief
+-   *    Request for setting the Baud rate of the actuator
+-  */
+-  class SetCanBaudRateRequest: public SingleMotorRequest<CommandType::COMMUNICATION_BAUD_RATE_SETTING> {
+-    public:
+-      SetCanBaudRateRequest(CanBaudRate const baud_rate);
+-      SetCanBaudRateRequest(SetCanBaudRateRequest const&) = default;
+-      SetCanBaudRateRequest& operator = (SetCanBaudRateRequest const&) = default;
+-      SetCanBaudRateRequest(SetCanBaudRateRequest&&) = default;
+-      SetCanBaudRateRequest& operator = (SetCanBaudRateRequest&&) = default;
+-      using SingleMotorRequest::SingleMotorRequest;
+-
+-      /**\fn getBaudRate
+-       * \brief
+-       *    Get the Baud rate that should be set to the actuator
+-       * 
+-       * \return
+-       *    The Baud rate that the actuator should be using
+-      */
+-      [[nodiscard]]
+-      CanBaudRate getBaudRate() const noexcept;
+-  };
+-
+   /**\class SetEncoderZeroRequest
+    * \brief
+    *    Request for setting the encoder zero to a given value
+   */
+   class SetEncoderZeroRequest: public SingleMotorRequest<CommandType::WRITE_ENCODER_MULTI_TURN_VALUE_TO_ROM_AS_ZERO> {
+     public:
+-      SetEncoderZeroRequest(std::int32_t const encoder_offset);
++      SetEncoderZeroRequest(std::int16_t const encoder_offset);
+       SetEncoderZeroRequest(SetEncoderZeroRequest const&) = default;
+       SetEncoderZeroRequest& operator = (SetEncoderZeroRequest const&) = default;
+       SetEncoderZeroRequest(SetEncoderZeroRequest&&) = default;
+@@ -196,7 +99,7 @@
+        *    The encoder zero value
+       */
+       [[nodiscard]]
+-      std::int32_t getEncoderZero() const noexcept;
++      std::int16_t getEncoderZero() const noexcept;
+   };
+ 
+   /**\class SetGainsRequest
+@@ -238,23 +141,23 @@
+   template <CommandType C>
+   constexpr SetGainsRequest<C>::SetGainsRequest(Gains const& gains) noexcept
+   : SingleMotorRequest<C>{} {
+-    this->data_[2] = gains.current.kp;
+-    this->data_[3] = gains.current.ki;
++    this->data_[2] = gains.position.kp;
++    this->data_[3] = gains.position.ki;
+     this->data_[4] = gains.speed.kp;
+     this->data_[5] = gains.speed.ki;
+-    this->data_[6] = gains.position.kp;
+-    this->data_[7] = gains.position.ki;
++    this->data_[6] = gains.current.kp;
++    this->data_[7] = gains.current.ki;
+     return;
+   }
+ 
+   template <CommandType C>
+   constexpr Gains SetGainsRequest<C>::getGains() const noexcept {
+-    auto const current_kp {this->data_[2]};
+-    auto const current_ki {this->data_[3]};
++    auto const position_kp {this->data_[2]};
++    auto const position_ki {this->data_[3]};
+     auto const speed_kp {this->data_[4]};
+     auto const speed_ki {this->data_[5]};
+-    auto const position_kp {this->data_[6]};
+-    auto const position_ki {this->data_[7]};
++    auto const current_kp {this->data_[6]};
++    auto const current_ki {this->data_[7]};
+     return Gains{current_kp, current_ki, speed_kp, speed_ki, position_kp, position_ki};
+   }
+ 
+@@ -305,37 +208,6 @@
+       float getPosition() const noexcept;
+   };
+ 
+-  /**\class SetTimeoutRequest
+-   * \brief
+-   *    Request for setting the communication interruption protection time setting
+-  */
+-  class SetTimeoutRequest: public SingleMotorRequest<CommandType::COMMUNICATION_INTERRUPTION_PROTECTION_TIME_SETTING> {
+-    public:
+-      /**\fn SetTimeoutRequest
+-       * \brief
+-       *    Class constructor
+-       * 
+-       * \param[in] timeout
+-       *    The communication interruption protection time setting in milliseconds, 0 if this feature should be de-activated
+-      */
+-      SetTimeoutRequest(std::chrono::milliseconds const& timeout);
+-      SetTimeoutRequest() = delete;
+-      SetTimeoutRequest(SetTimeoutRequest const&) = default;
+-      SetTimeoutRequest& operator = (SetTimeoutRequest const&) = default;
+-      SetTimeoutRequest(SetTimeoutRequest&&) = default;
+-      SetTimeoutRequest& operator = (SetTimeoutRequest&&) = default;
+-      using SingleMotorRequest::SingleMotorRequest;
+-
+-      /**\fn getTimeout
+-       * \brief
+-       *    Get the communication interruption protection time to be set
+-       * 
+-       * \return
+-       *    The communication interruption protection time to be set
+-      */
+-      [[nodiscard]]
+-      std::chrono::milliseconds getTimeout() const noexcept;
+-  };
+ 
+   /**\class SetTorqueRequest
+    * \brief
+@@ -350,7 +222,7 @@
+        * \param[in] current
+        *    The current set-point in Ampere
+       */
+-      SetTorqueRequest(float const current);
++      SetTorqueRequest(float const current, float const current_constant);
+       SetTorqueRequest() = delete;
+       SetTorqueRequest(SetTorqueRequest const&) = default;
+       SetTorqueRequest& operator = (SetTorqueRequest const&) = default;
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/protocol/responses.hpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/protocol/responses.hpp
+--- /home/kozuenakano/temp/myactuator_rmd/include/myactuator_rmd/protocol/responses.hpp	2025-04-22 15:42:21.622822674 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/include/myactuator_rmd/protocol/responses.hpp	2025-04-21 11:37:54.071348426 +0900
+@@ -25,29 +25,6 @@
+ 
+ namespace myactuator_rmd {
+ 
+-  /**\class GetCanIdResponse
+-   * \brief
+-   *    Request for getting the CAN ID of the actuator
+-  */
+-  class GetCanIdResponse: public SingleMotorResponse<CommandType::CAN_ID_SETTING> {
+-    public:
+-      GetCanIdResponse() = delete;
+-      GetCanIdResponse(GetCanIdResponse const&) = default;
+-      GetCanIdResponse& operator = (GetCanIdResponse const&) = default;
+-      GetCanIdResponse(GetCanIdResponse&&) = default;
+-      GetCanIdResponse& operator = (GetCanIdResponse&&) = default;
+-      using SingleMotorResponse::SingleMotorResponse;
+-
+-      /**\fn getCanId
+-       * \brief
+-       *    Get the CAN ID of the actuator
+-       * 
+-       * \return
+-       *    The CAN ID of the actuator starting at 0x240
+-      */
+-      [[nodiscard]]
+-      virtual std::uint16_t getCanId() const noexcept;
+-  };
+ 
+   /**\class GetAccelerationResponse
+    * \brief
+@@ -94,47 +71,9 @@
+        *    The multi-turn angle with a resolution of 0.01 deg
+       */
+       [[nodiscard]]
+-      float getAngle() const noexcept;
++      double getAngle() const noexcept;
+   };
+ 
+-  /**\class GetMultiTurnEncoderPositionResponse
+-   * \brief
+-   *    Response to request for reading a multi-turn encoder position
+-   *
+-   * \tparam C
+-   *    Type of the command to be requested
+-  */
+-  template <CommandType C>
+-  class MultiTurnEncoderPositionResponse: public SingleMotorResponse<C> {
+-    public:
+-      MultiTurnEncoderPositionResponse() = delete;
+-      MultiTurnEncoderPositionResponse(MultiTurnEncoderPositionResponse const&) = default;
+-      MultiTurnEncoderPositionResponse& operator = (MultiTurnEncoderPositionResponse const&) = default;
+-      MultiTurnEncoderPositionResponse(MultiTurnEncoderPositionResponse&&) = default;
+-      MultiTurnEncoderPositionResponse& operator = (MultiTurnEncoderPositionResponse&&) = default;
+-      using SingleMotorResponse<C>::SingleMotorResponse;
+-
+-      /**\fn getPosition
+-       * \brief
+-       *    Get the encoder position
+-       * 
+-       * \return
+-       *    The current encoder position
+-      */
+-      [[nodiscard]]
+-      std::int32_t getPosition() const noexcept;
+-  };
+-
+-  template <CommandType C>
+-  std::int32_t MultiTurnEncoderPositionResponse<C>::getPosition() const noexcept {
+-    auto const encoder_position {this->template getAs<std::int32_t>(4)};
+-    return encoder_position;
+-  }
+-
+-  using GetMultiTurnEncoderPositionResponse = MultiTurnEncoderPositionResponse<CommandType::READ_MULTI_TURN_ENCODER_POSITION>;
+-  using GetMultiTurnEncoderOriginalPositionResponse = MultiTurnEncoderPositionResponse<CommandType::READ_MULTI_TURN_ENCODER_ORIGINAL_POSITION>;
+-  using GetMultiTurnEncoderZeroOffsetResponse = MultiTurnEncoderPositionResponse<CommandType::READ_MULTI_TURN_ENCODER_ZERO_OFFSET>;
+-
+   /**\class GetSingleTurnAngleResponse
+    * \brief
+    *    Response to request for reading a single-turn angle
+@@ -203,9 +142,6 @@
+       std::int16_t getOffset() const noexcept;
+   };
+ 
+-  using LockBrakeResponse = SingleMotorResponse<CommandType::LOCK_BRAKE>;
+-  using ReleaseBrakeResponse = SingleMotorResponse<CommandType::RELEASE_BRAKE>;
+-
+   /**\class FeedbackResponse
+    * \brief
+    *    Base class for all responses containing a feedback
+@@ -231,16 +167,16 @@
+        *    Feedback from the actuator
+       */
+       [[nodiscard]]
+-      Feedback getStatus() const noexcept;
++      Feedback getStatus(float const current_constant) const noexcept;
+   };
+ 
+   template <CommandType C>
+-  Feedback FeedbackResponse<C>::getStatus() const noexcept {
++  Feedback FeedbackResponse<C>::getStatus(float const current_constant) const noexcept {
+     auto const temperature {static_cast<int>(this->template getAs<std::int8_t>(1))};
+-    auto const current {static_cast<float>(this->template getAs<std::int16_t>(2))*0.01f};
++    auto const current {static_cast<float>(this->template getAs<std::int16_t>(2))*current_constant};
+     auto const shaft_speed {static_cast<float>(this->template getAs<std::int16_t>(4))};
+-    auto const shaft_angle {static_cast<float>(this->template getAs<std::int16_t>(6))};
+-    return Feedback{temperature, current, shaft_speed, shaft_angle};
++    auto const shaft_encorder {static_cast<float>(this->template getAs<std::uint16_t>(6))};
++    return Feedback{temperature, current, shaft_speed, shaft_encorder};
+   }
+ 
+   using GetMotorStatus2Response = FeedbackResponse<CommandType::READ_MOTOR_STATUS_2>;
+@@ -278,12 +214,12 @@
+ 
+   template <CommandType C>
+   constexpr Gains GainsResponse<C>::getGains() const noexcept {
+-    auto const current_kp {this->data_[2]};
+-    auto const current_ki {this->data_[3]};
++    auto const position_kp {this->data_[2]};
++    auto const position_ki {this->data_[3]};
+     auto const speed_kp {this->data_[4]};
+     auto const speed_ki {this->data_[5]};
+-    auto const position_kp {this->data_[6]};
+-    auto const position_ki {this->data_[7]};
++    auto const current_kp {this->data_[6]};
++    auto const current_ki {this->data_[7]};
+     return Gains{current_kp, current_ki, speed_kp, speed_ki, position_kp, position_ki};
+   }
+ 
+@@ -291,81 +227,6 @@
+   using SetControllerGainsPersistentlyResponse = GainsResponse<CommandType::WRITE_PID_PARAMETERS_TO_ROM>;
+   using SetControllerGainsResponse = GainsResponse<CommandType::WRITE_PID_PARAMETERS_TO_RAM>;
+ 
+-  /**\class GetControlModeResponse
+-   * \brief
+-   *    Get the current control mode the actuator is operating in
+-  */
+-  class GetControlModeResponse: public SingleMotorResponse<CommandType::READ_SYSTEM_OPERATING_MODE> {
+-    public:
+-      GetControlModeResponse() = delete;
+-      GetControlModeResponse(GetControlModeResponse const&) = default;
+-      GetControlModeResponse& operator = (GetControlModeResponse const&) = default;
+-      GetControlModeResponse(GetControlModeResponse&&) = default;
+-      GetControlModeResponse& operator = (GetControlModeResponse&&) = default;
+-      using SingleMotorResponse::SingleMotorResponse;
+-
+-      /**\fn getMode
+-       * \brief
+-       *    Get the current control mode
+-       * 
+-       * \return
+-       *    The current control mode
+-      */
+-      [[nodiscard]]
+-      constexpr ControlMode getMode() const noexcept;
+-  };
+-
+-  constexpr ControlMode GetControlModeResponse::getMode() const noexcept {
+-    return static_cast<ControlMode>(data_[7]);
+-  }
+-
+-  /**\class GetMotorModelResponse
+-   * \brief
+-   *    Response to request for reading the motor model
+-  */
+-  class GetMotorModelResponse: public SingleMotorResponse<CommandType::READ_MOTOR_MODEL> {
+-    public:
+-      GetMotorModelResponse() = delete;
+-      GetMotorModelResponse(GetMotorModelResponse const&) = default;
+-      GetMotorModelResponse& operator = (GetMotorModelResponse const&) = default;
+-      GetMotorModelResponse(GetMotorModelResponse&&) = default;
+-      GetMotorModelResponse& operator = (GetMotorModelResponse&&) = default;
+-      using SingleMotorResponse::SingleMotorResponse;
+-
+-      /**\fn getModel
+-       * \brief
+-       *    Get the motor model
+-       * 
+-       * \return
+-       *    The version string of the motor model
+-      */
+-      [[nodiscard]]
+-      std::string getModel() const noexcept;
+-  };
+-
+-  /**\class GetMotorPowerResponse
+-   * \brief
+-   *    Response to request for reading the motor model
+-  */
+-  class GetMotorPowerResponse: public SingleMotorResponse<CommandType::READ_MOTOR_POWER> {
+-    public:
+-      GetMotorPowerResponse() = delete;
+-      GetMotorPowerResponse(GetMotorPowerResponse const&) = default;
+-      GetMotorPowerResponse& operator = (GetMotorPowerResponse const&) = default;
+-      GetMotorPowerResponse(GetMotorPowerResponse&&) = default;
+-      GetMotorPowerResponse& operator = (GetMotorPowerResponse&&) = default;
+-      using SingleMotorResponse::SingleMotorResponse;
+-
+-      /**\fn getPower
+-       * \brief
+-       *    Get the current motor power
+-       * 
+-       * \return
+-       *    The current motor power in Watt with a resolution of 0.1
+-      */
+-      [[nodiscard]]
+-      float getPower() const noexcept;
+-  };
+ 
+   /**\class GetMotorStatus1Response
+    * \brief
+@@ -415,56 +276,8 @@
+       MotorStatus3 getStatus() const noexcept;
+   };
+ 
+-  /**\class GetSystemRuntimeResponse
+-   * \brief
+-   *    Response to request for getting the actuator's runtime
+-  */
+-  class GetSystemRuntimeResponse: public SingleMotorResponse<CommandType::READ_SYSTEM_RUNTIME> {
+-    public:
+-      GetSystemRuntimeResponse() = delete;
+-      GetSystemRuntimeResponse(GetSystemRuntimeResponse const&) = default;
+-      GetSystemRuntimeResponse& operator = (GetSystemRuntimeResponse const&) = default;
+-      GetSystemRuntimeResponse(GetSystemRuntimeResponse&&) = default;
+-      GetSystemRuntimeResponse& operator = (GetSystemRuntimeResponse&&) = default;
+-      using SingleMotorResponse::SingleMotorResponse;
+-
+-      /**\fn getRuntime
+-       * \brief
+-       *    Get the actuator's runtime in milliseconds
+-       * 
+-       * \return
+-       *    The actuators runtime in milliseconds
+-      */
+-      [[nodiscard]]
+-      std::chrono::milliseconds getRuntime() const noexcept;
+-  };
+-
+-  /**\class GetVersionDateResponse
+-   * \brief
+-   *    Response to request for getting the actuator's version date
+-  */
+-  class GetVersionDateResponse: public SingleMotorResponse<CommandType::READ_SYSTEM_SOFTWARE_VERSION_DATE> {
+-    public:
+-      GetVersionDateResponse() = delete;
+-      GetVersionDateResponse(GetVersionDateResponse const&) = default;
+-      GetVersionDateResponse& operator = (GetVersionDateResponse const&) = default;
+-      GetVersionDateResponse(GetVersionDateResponse&&) = default;
+-      GetVersionDateResponse& operator = (GetVersionDateResponse&&) = default;
+-      using SingleMotorResponse::SingleMotorResponse;
+-
+-      /**\fn getVersion
+-       * \brief
+-       *    Get the version date as an integer
+-       * 
+-       * \return
+-       *    The version date as an integer number
+-      */
+-      [[nodiscard]]
+-      std::uint32_t getVersion() const noexcept;
+-  };
+ 
+-  using SetAccelerationResponse = SingleMotorResponse<CommandType::WRITE_ACCELERATION_TO_RAM_AND_ROM>;
+-  using SetCanIdResponse = SingleMotorResponse<CommandType::CAN_ID_SETTING>;
++  using SetAccelerationResponse = SingleMotorResponse<CommandType::WRITE_ACCELERATION_TO_RAM>;
+ 
+   /**\class SetCurrentPositionAsEncoderZeroResponse
+    * \brief
+@@ -491,7 +304,6 @@
+   };
+ 
+   using SetEncoderZeroResponse = SingleMotorRequest<CommandType::WRITE_ENCODER_MULTI_TURN_VALUE_TO_ROM_AS_ZERO>;
+-  using SetTimeoutResponse = SingleMotorResponse<CommandType::COMMUNICATION_INTERRUPTION_PROTECTION_TIME_SETTING>;
+   using ShutdownMotorResponse = SingleMotorResponse<CommandType::SHUTDOWN_MOTOR>;
+   using StopMotorResponse = SingleMotorResponse<CommandType::STOP_MOTOR>;
+ 
+Only in /home/kozuenakano/temp/myactuator_rmd: rmd.patch
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/src/actuator_interface.cpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/src/actuator_interface.cpp
+--- /home/kozuenakano/temp/myactuator_rmd/src/actuator_interface.cpp	2025-04-22 15:42:21.622822674 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/src/actuator_interface.cpp	2025-04-21 11:37:54.072348473 +0900
+@@ -31,11 +31,6 @@
+     return response.getAcceleration();
+   }
+ 
+-  std::uint16_t ActuatorInterface::getCanId() {
+-    GetCanIdRequest const request {};
+-    GetCanIdResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getCanId();
+-  }
+ 
+   Gains ActuatorInterface::getControllerGains() {
+     GetControllerGainsRequest const request {};
+@@ -43,23 +38,6 @@
+     return response.getGains();
+   }
+ 
+-  ControlMode ActuatorInterface::getControlMode() {
+-    GetControlModeRequest const request {};
+-    GetControlModeResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getMode();
+-  }
+-
+-  std::string ActuatorInterface::getMotorModel() {
+-    GetMotorModelRequest const request {};
+-    GetMotorModelResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getModel();
+-  }
+-
+-  float ActuatorInterface::getMotorPower() {
+-    GetMotorPowerRequest const request {};
+-    GetMotorPowerResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getPower();
+-  }
+ 
+   MotorStatus1 ActuatorInterface::getMotorStatus1() {
+     GetMotorStatus1Request const request {};
+@@ -67,10 +45,10 @@
+     return response.getStatus();
+   }
+ 
+-  MotorStatus2 ActuatorInterface::getMotorStatus2() {
++  MotorStatus2 ActuatorInterface::getMotorStatus2(/*float const current_constant*/) {
+     GetMotorStatus2Request const request {};
+     GetMotorStatus2Response const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getStatus();
++    return response.getStatus(0.0161093483f/*TODO:current_constant*/);
+   }
+ 
+   MotorStatus3 ActuatorInterface::getMotorStatus3() {
+@@ -85,29 +63,6 @@
+     return response.getAngle();
+   }
+ 
+-  std::int32_t ActuatorInterface::getMultiTurnEncoderPosition() {
+-    GetMultiTurnEncoderPositionRequest const request {};
+-    GetMultiTurnEncoderPositionResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getPosition();
+-  }
+-
+-  std::int32_t ActuatorInterface::getMultiTurnEncoderOriginalPosition() {
+-    GetMultiTurnEncoderOriginalPositionRequest const request {};
+-    GetMultiTurnEncoderOriginalPositionResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getPosition();
+-  }
+-
+-  std::int32_t ActuatorInterface::getMultiTurnEncoderZeroOffset() {
+-    GetMultiTurnEncoderZeroOffsetRequest const request {};
+-    GetMultiTurnEncoderZeroOffsetResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getPosition();
+-  }
+-
+-  std::chrono::milliseconds ActuatorInterface::getRuntime() {
+-    GetSystemRuntimeRequest const request {};
+-    GetSystemRuntimeResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getRuntime();
+-  }
+ 
+   float ActuatorInterface::getSingleTurnAngle() {
+     GetSingleTurnAngleRequest const request {};
+@@ -121,51 +76,27 @@
+     return response.getPosition();
+   }
+ 
+-  std::uint32_t ActuatorInterface::getVersionDate() {
+-    GetVersionDateRequest const request {};
+-    GetVersionDateResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getVersion();
+-  }
+-
+-  void ActuatorInterface::lockBrake() {
+-    LockBrakeRequest const request {};
+-    [[maybe_unused]] LockBrakeResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return;
+-  }
+-
+-  void ActuatorInterface::releaseBrake() {
+-    ReleaseBrakeRequest const request {};
+-    [[maybe_unused]] ReleaseBrakeResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return;
+-  }
+-
+-  void ActuatorInterface::reset() {
+-    ResetRequest const request {};
+-    driver_.send(request, actuator_id_);
+-    return;
+-  }
+-
+-  Feedback ActuatorInterface::sendCurrentSetpoint(float const current) {
+-    SetTorqueRequest const request {current};
++  Feedback ActuatorInterface::sendCurrentSetpoint(float const current , float const current_constant) {
++    SetTorqueRequest const request {current,current_constant};
+     SetTorqueResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getStatus();
++    return response.getStatus(current_constant);
+   }
+ 
+-  Feedback ActuatorInterface::sendPositionAbsoluteSetpoint(float const position, float const max_speed) {
++  Feedback ActuatorInterface::sendPositionAbsoluteSetpoint(float const position, float const max_speed , float const current_constant) {
+     SetPositionAbsoluteRequest const request {position, max_speed};
+     SetPositionAbsoluteResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getStatus();
++    return response.getStatus(current_constant);
+   }
+ 
+-  Feedback ActuatorInterface::sendTorqueSetpoint(float const torque, float const torque_constant) {
++  Feedback ActuatorInterface::sendTorqueSetpoint(float const torque, float const torque_constant, float const current_constant) {
+     auto const current {torque/torque_constant};
+-    return sendCurrentSetpoint(current);
++    return sendCurrentSetpoint(current , current_constant);
+   }
+ 
+-  Feedback ActuatorInterface::sendVelocitySetpoint(float const speed) {
++  Feedback ActuatorInterface::sendVelocitySetpoint(float const speed , float const current_constant) {
+     SetVelocityRequest const request {speed};
+     SetVelocityResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return response.getStatus();
++    return response.getStatus(current_constant);
+   }
+ 
+   void ActuatorInterface::setAcceleration(std::uint32_t const acceleration, AccelerationType const mode) {
+@@ -174,11 +105,6 @@
+     return;
+   }
+ 
+-  void ActuatorInterface::setCanId(std::uint16_t const can_id) {
+-    SetCanIdRequest const request {can_id};
+-    [[maybe_unused]] SetCanIdResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return;
+-  }
+ 
+   std::int32_t ActuatorInterface::setCurrentPositionAsEncoderZero() {
+     SetCurrentPositionAsEncoderZeroRequest const request {};
+@@ -186,17 +112,12 @@
+     return response.getEncoderZero();
+   }
+ 
+-  void ActuatorInterface::setEncoderZero(std::int32_t const encoder_offset) {
++  void ActuatorInterface::setEncoderZero(std::int16_t const encoder_offset) {
+     SetEncoderZeroRequest const request {encoder_offset};
+     [[maybe_unused]] SetEncoderZeroResponse const response {driver_.sendRecv(request, actuator_id_)};
+     return;
+   }
+ 
+-  void ActuatorInterface::setCanBaudRate(CanBaudRate const baud_rate) {
+-    SetCanBaudRateRequest const request {baud_rate};
+-    driver_.send(request, actuator_id_);
+-    return;
+-  }
+ 
+   Gains ActuatorInterface::setControllerGains(Gains const& gains, bool const is_persistent) {
+     if (is_persistent) {
+@@ -210,11 +131,6 @@
+     }
+   }
+ 
+-  void ActuatorInterface::setTimeout(std::chrono::milliseconds const& timeout) {
+-    SetTimeoutRequest const request {timeout};
+-    [[maybe_unused]] SetTimeoutResponse const response {driver_.sendRecv(request, actuator_id_)};
+-    return;
+-  }
+ 
+   void ActuatorInterface::shutdownMotor() {
+     ShutdownMotorRequest const request {};
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/src/protocol/requests.cpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/src/protocol/requests.cpp
+--- /home/kozuenakano/temp/myactuator_rmd/src/protocol/requests.cpp	2025-04-22 15:42:21.622822674 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/src/protocol/requests.cpp	2025-04-21 11:37:54.072348473 +0900
+@@ -13,27 +13,6 @@
+ 
+ namespace myactuator_rmd {
+ 
+-  bool CanIdRequest::isWrite() const noexcept {
+-    return (getAs<std::uint8_t>(2) == 0) ? true : false;
+-  }
+-
+-  GetCanIdRequest::GetCanIdRequest()
+-  : CanIdRequest{}  {
+-    setAt(static_cast<std::uint8_t>(1), 2);
+-    return;
+-  }
+-
+-  SetCanIdRequest::SetCanIdRequest(std::uint16_t const can_id)
+-  : CanIdRequest{}  {
+-    setAt(static_cast<std::uint8_t>(0), 2);
+-    setAt(static_cast<std::uint8_t>(can_id), 6);
+-    return;
+-  }
+-
+-  std::uint16_t SetCanIdRequest::getCanId() const noexcept {
+-    return static_cast<std::uint16_t>(getAs<std::uint8_t>(7));
+-  }
+-
+   SetAccelerationRequest::SetAccelerationRequest(std::uint32_t const acceleration, AccelerationType const mode)
+   : SingleMotorRequest{} {
+     if ((acceleration != 0) && ((acceleration < 100) || (acceleration > 60000))) {
+@@ -49,28 +28,14 @@
+     return getAs<std::uint32_t>(4);
+   }
+ 
+-  AccelerationType SetAccelerationRequest::getMode() const noexcept {
+-    return static_cast<AccelerationType>(getAs<std::uint8_t>(1));
+-  }
+-
+-  SetCanBaudRateRequest::SetCanBaudRateRequest(CanBaudRate const baud_rate)
+-  : SingleMotorRequest{} {
+-    setAt(static_cast<std::uint8_t>(baud_rate), 7);
+-    return;
+-  }
+-
+-  CanBaudRate SetCanBaudRateRequest::getBaudRate() const noexcept {
+-    return static_cast<CanBaudRate>(getAs<std::uint8_t>(7));
+-  }
+-
+-  SetEncoderZeroRequest::SetEncoderZeroRequest(std::int32_t const encoder_offset)
++  SetEncoderZeroRequest::SetEncoderZeroRequest(std::int16_t const encoder_offset)
+   : SingleMotorRequest{} {
+     setAt(encoder_offset, 4);
+     return;
+   }
+ 
+-  std::int32_t SetEncoderZeroRequest::getEncoderZero() const noexcept {
+-    return getAs<std::int32_t>(4);
++  std::int16_t SetEncoderZeroRequest::getEncoderZero() const noexcept {
++    return getAs<std::int16_t>(6);
+   }
+ 
+   SetPositionAbsoluteRequest::SetPositionAbsoluteRequest(float const position, float const max_speed)
+@@ -90,9 +55,9 @@
+     return static_cast<float>(getAs<std::int32_t>(4)/100.0f);
+   }
+ 
+-  SetTorqueRequest::SetTorqueRequest(float const current)
++  SetTorqueRequest::SetTorqueRequest(float const current, float const current_constant)
+   : SingleMotorRequest{} {
+-    auto const c {static_cast<std::int16_t>(current/0.01f)};
++    auto const c {static_cast<std::int16_t>(current/current_constant)};
+     setAt(c, 4);
+     return;
+   }
+@@ -101,16 +66,6 @@
+     return static_cast<float>(getAs<std::int16_t>(4))*0.01f;
+   }
+ 
+-  SetTimeoutRequest::SetTimeoutRequest(std::chrono::milliseconds const& timeout) {
+-    setAt(static_cast<std::uint32_t>(timeout.count()), 4);
+-    return;
+-  }
+-
+-  std::chrono::milliseconds SetTimeoutRequest::getTimeout() const noexcept {
+-    std::chrono::milliseconds const timeout {getAs<std::uint32_t>(4)};
+-    return timeout;
+-  }
+-
+   SetVelocityRequest::SetVelocityRequest(float const speed)
+   : SingleMotorRequest{} {
+     auto const s {static_cast<std::int32_t>(speed*100.0f)};
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/src/protocol/responses.cpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/src/protocol/responses.cpp
+--- /home/kozuenakano/temp/myactuator_rmd/src/protocol/responses.cpp	2025-04-22 15:42:21.622822674 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/src/protocol/responses.cpp	2025-04-21 11:37:54.072348473 +0900
+@@ -10,52 +10,42 @@
+ #include "myactuator_rmd/actuator_state/motor_status_3.hpp"
+ #include "myactuator_rmd/exceptions.hpp"
+ 
++#include <stdio.h>
+ 
+ namespace myactuator_rmd {
+ 
+-  std::uint16_t GetCanIdResponse::getCanId() const noexcept {
+-    return getAs<std::uint16_t>(6);
+-  }
+ 
+   std::int32_t GetAccelerationResponse::getAcceleration() const noexcept {
+     auto const acceleration {getAs<std::int32_t>(4)};
+     return acceleration;
+   }
+ 
+-  std::string GetMotorModelResponse::getModel() const noexcept {
+-    std::string const model {&data_[1], &data_[1]+7};
+-    return model;
+-  }
+-
+-  float GetMotorPowerResponse::getPower() const noexcept {
+-    auto const motor_power {static_cast<float>(getAs<std::uint16_t>(6))*0.1f};
+-    return motor_power;
+-  }
+-
+   MotorStatus1 GetMotorStatus1Response::getStatus() const noexcept {
+     auto const temperature {static_cast<int>(getAs<std::int8_t>(1))};
+-    auto const is_brake_released {static_cast<bool>(getAs<std::uint8_t>(3))};
+-    auto const voltage {static_cast<float>(getAs<std::uint16_t>(4))*0.1f};
+-    auto const error_code {static_cast<ErrorCode>(getAs<std::uint16_t>(6))};
+-    return MotorStatus1{temperature, is_brake_released, voltage, error_code};
++    auto const voltage {static_cast<float>(getAs<std::uint16_t>(3))*0.1f};
++    auto const error_code {static_cast<ErrorCode>(getAs<std::uint8_t>(7))};
++    return MotorStatus1{temperature,voltage, error_code};
+   }
+ 
+   MotorStatus3 GetMotorStatus3Response::getStatus() const noexcept {
+     auto const temperature {static_cast<int>(getAs<std::int8_t>(1))};
+-    auto const current_phase_a {static_cast<float>(getAs<std::int16_t>(2))*0.01f};
+-    auto const current_phase_b {static_cast<float>(getAs<std::int16_t>(4))*0.01f};
+-    auto const current_phase_c {static_cast<float>(getAs<std::int16_t>(6))*0.01f};
++    auto const current_phase_a {static_cast<float>(getAs<std::int16_t>(2))*0.015625f};
++    auto const current_phase_b {static_cast<float>(getAs<std::int16_t>(4))*0.015625f};
++    auto const current_phase_c {static_cast<float>(getAs<std::int16_t>(6))*0.015625f};
+     return MotorStatus3{temperature, current_phase_a, current_phase_b, current_phase_c};
+   }
+ 
+-  float GetMultiTurnAngleResponse::getAngle() const noexcept {
+-    auto const angle {static_cast<float>(getAs<std::int32_t>(4))*0.01f};
+-    return angle;
++  double GetMultiTurnAngleResponse::getAngle() const noexcept {
++    //TODO:
++    int64_t angleShift {static_cast<int64_t>(getAs<std::int64_t>(0))};
++    angleShift = angleShift >> 8;
++    return static_cast<float>(angleShift *0.01f);
+   }
+ 
+   float GetSingleTurnAngleResponse::getAngle() const noexcept {
+     // This does not seem to give the correct results at least with my motor
+-    auto const angle {static_cast<float>(getAs<std::int16_t>(6))*0.01f};
++    //auto const angle {static_cast<float>(getAs<std::int16_t>(6))*0.01f};
++    auto const angle {static_cast<float>(getAs<std::int32_t>(4))*0.01f};
+     return angle;
+   }
+ 
+@@ -74,17 +64,8 @@
+     return position;
+   }
+ 
+-  std::chrono::milliseconds GetSystemRuntimeResponse::getRuntime() const noexcept {
+-    std::chrono::milliseconds const runtime {getAs<std::uint32_t>(4)};
+-    return runtime;
+-  }
+-
+-  std::uint32_t GetVersionDateResponse::getVersion() const noexcept {
+-    return getAs<std::uint32_t>(4);
+-  }
+-
+   std::int32_t SetCurrentPositionAsEncoderZeroResponse::getEncoderZero() const noexcept {
+-    return getAs<std::int32_t>(4);
++    return getAs<std::int16_t>(6);
+   }
+ 
+ }
+diff -ur -w -b -B /home/kozuenakano/temp/myactuator_rmd/test/protocol/responses_test.cpp /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/test/protocol/responses_test.cpp
+--- /home/kozuenakano/temp/myactuator_rmd/test/protocol/responses_test.cpp	2025-04-22 15:42:21.622822674 +0900
++++ /home/kozuenakano/ros2_ws/src/third_party/myactuator_rmd/test/protocol/responses_test.cpp	2025-04-21 11:37:54.072348473 +0900
+@@ -20,12 +20,6 @@
+ namespace myactuator_rmd {
+   namespace test {
+ 
+-    TEST(GetCanIdResponseTest, parsing) {
+-      myactuator_rmd::GetCanIdResponse const request {{0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x02}};
+-      std::uint16_t const can_id {request.getCanId()};
+-      EXPECT_EQ(can_id, 0x242);
+-    }
+-
+     TEST(GetAccelerationResponseTest, parsing) {
+       myactuator_rmd::GetAccelerationResponse const response {{0x42, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00}};
+       std::int32_t const acceleration {response.getAcceleration()};

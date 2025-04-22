@@ -34,7 +34,7 @@ namespace myactuator_rmd {
        * \param[in] error_code_
        *    The error code
       */
-      constexpr MotorStatus1(int const temperature_ = 0, bool const is_brake_released_ = false, 
+      constexpr MotorStatus1(int const temperature_ = 0, /*bool const is_brake_released_ = false,*/ 
                              float const voltage_ = 0.0f, ErrorCode const error_code_ = ErrorCode::NO_ERROR) noexcept;
       MotorStatus1(MotorStatus1 const&) = default;
       MotorStatus1& operator = (MotorStatus1 const&) = default;
@@ -42,14 +42,14 @@ namespace myactuator_rmd {
       MotorStatus1& operator = (MotorStatus1&&) = default;
 
       int temperature;
-      bool is_brake_released;
+      //bool is_brake_released;
       float voltage;
       ErrorCode error_code;
   };
 
-  constexpr MotorStatus1::MotorStatus1(int const temperature_, bool const is_brake_released_, 
+  constexpr MotorStatus1::MotorStatus1(int const temperature_, /*bool const is_brake_released_,*/ 
                                        float const voltage_, ErrorCode const error_code_) noexcept
-  : temperature{temperature_}, is_brake_released{is_brake_released_}, voltage{voltage_}, error_code{error_code_} {
+  : temperature{temperature_},/* is_brake_released{is_brake_released_},*/ voltage{voltage_}, error_code{error_code_} {
     return;
   }
 

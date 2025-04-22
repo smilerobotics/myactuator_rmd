@@ -32,7 +32,7 @@ namespace myactuator_rmd {
        * \param[in] shaft_angle_
        *    The output shaft angle in degrees with a resolution of 1 deg and a maximum range of 32767
       */
-      constexpr MotorStatus2(int const temperature_ = 0, float const current_ = 0.0f, float const shaft_speed_ = 0.0f, float const shaft_angle_ = 0.0f) noexcept;
+      constexpr MotorStatus2(int const temperature_ = 0, float const current_ = 0.0f, float const shaft_speed_ = 0.0f, float const shaft_encorder_ = 0.0f) noexcept;
       MotorStatus2(MotorStatus2 const&) = default;
       MotorStatus2& operator = (MotorStatus2 const&) = default;
       MotorStatus2(MotorStatus2&&) = default;
@@ -41,11 +41,11 @@ namespace myactuator_rmd {
       int temperature;
       float current;
       float shaft_speed;
-      float shaft_angle;
+      float shaft_encorder;
   };
 
-  constexpr MotorStatus2::MotorStatus2(int const temperature_, float const current_, float const shaft_speed_, float const shaft_angle_) noexcept
-  : temperature{temperature_}, current{current_}, shaft_speed{shaft_speed_}, shaft_angle{shaft_angle_} {
+  constexpr MotorStatus2::MotorStatus2(int const temperature_, float const current_, float const shaft_speed_, float const shaft_encorder_) noexcept
+  : temperature{temperature_}, current{current_}, shaft_speed{shaft_speed_}, shaft_encorder{shaft_encorder_} {
     return;
   }
 

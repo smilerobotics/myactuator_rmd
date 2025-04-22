@@ -22,7 +22,9 @@ namespace myactuator_rmd {
   class CanAddressOffset {
     public:
       inline static constexpr std::uint32_t request {0x140};
-      inline static constexpr std::uint32_t response {0x240};
+      //inline static constexpr std::uint32_t response {0x240};
+      //TODO:
+      inline static constexpr std::uint32_t response {0x140};
   };
 
 }

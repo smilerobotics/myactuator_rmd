@@ -24,94 +24,21 @@ namespace myactuator_rmd {
   
   using GetAccelerationRequest = SingleMotorRequest<CommandType::READ_ACCELERATION>;
   using GetControllerGainsRequest = SingleMotorRequest<CommandType::READ_PID_PARAMETERS>;
-  using GetControlModeRequest = SingleMotorRequest<CommandType::READ_SYSTEM_OPERATING_MODE>;
-  using GetMotorModelRequest =  SingleMotorRequest<CommandType::READ_MOTOR_MODEL>;
-  using GetMotorPowerRequest =  SingleMotorRequest<CommandType::READ_MOTOR_POWER>;
   using GetMotorStatus1Request = SingleMotorRequest<CommandType::READ_MOTOR_STATUS_1_AND_ERROR_FLAG>;
   using GetMotorStatus2Request =  SingleMotorRequest<CommandType::READ_MOTOR_STATUS_2>;
   using GetMotorStatus3Request = SingleMotorRequest<CommandType::READ_MOTOR_STATUS_3>;
   using GetMultiTurnAngleRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ANGLE>;
-  using GetMultiTurnEncoderPositionRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ENCODER_POSITION>;
-  using GetMultiTurnEncoderOriginalPositionRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ENCODER_ORIGINAL_POSITION>;
-  using GetMultiTurnEncoderZeroOffsetRequest = SingleMotorRequest<CommandType::READ_MULTI_TURN_ENCODER_ZERO_OFFSET>;
   using GetSingleTurnAngleRequest = SingleMotorRequest<CommandType::READ_SINGLE_TURN_ANGLE>;
   using GetSingleTurnEncoderPositionRequest = SingleMotorRequest<CommandType::READ_SINGLE_TURN_ENCODER>;
-  using GetSystemRuntimeRequest = SingleMotorRequest<CommandType::READ_SYSTEM_RUNTIME>;
-  using GetVersionDateRequest = SingleMotorRequest<CommandType::READ_SYSTEM_SOFTWARE_VERSION_DATE>;
-  using LockBrakeRequest = SingleMotorRequest<CommandType::LOCK_BRAKE>;
-  using ReleaseBrakeRequest = SingleMotorRequest<CommandType::RELEASE_BRAKE>;
-  using ResetRequest = SingleMotorRequest<CommandType::RESET_SYSTEM>;
   using SetCurrentPositionAsEncoderZeroRequest = SingleMotorRequest<CommandType::WRITE_CURRENT_MULTI_TURN_POSITION_TO_ROM_AS_ZERO>;
 
-  /**\class CanIdRequest
-   * \brief
-   *    Request for getting/setting the CAN ID of the actuator
-  */
-  class CanIdRequest: public SingleMotorRequest<CommandType::CAN_ID_SETTING> {
-    public:
-      using SingleMotorRequest::SingleMotorRequest;
 
-      /**\fn isWrite
-       * \brief
-       *    Check if the can request reads or writes the given CAN ID
-       * 
-       * \return
-       *    True in case this is a write command, false in case it is a read command
-      */
-      [[nodiscard]]
-      bool isWrite() const noexcept;
-
-    protected:
-      CanIdRequest() = default;
-      CanIdRequest(CanIdRequest const&) = default;
-      CanIdRequest& operator = (CanIdRequest const&) = default;
-      CanIdRequest(CanIdRequest&&) = default;
-      CanIdRequest& operator = (CanIdRequest&&) = default;
-  };
-
-  /**\class GetCanIdRequest
-   * \brief
-   *    Request for getting the CAN ID of the actuator
-  */
-  class GetCanIdRequest: public CanIdRequest {
-    public:
-      GetCanIdRequest();
-      GetCanIdRequest(GetCanIdRequest const&) = default;
-      GetCanIdRequest& operator = (GetCanIdRequest const&) = default;
-      GetCanIdRequest(GetCanIdRequest&&) = default;
-      GetCanIdRequest& operator = (GetCanIdRequest&&) = default;
-      using CanIdRequest::CanIdRequest;
-  };
-
-  /**\class SetCanIdRequest
-   * \brief
-   *    Request for setting the CAN ID of the actuator
-  */
-  class SetCanIdRequest: public CanIdRequest {
-    public:
-      SetCanIdRequest(std::uint16_t const can_id);
-      SetCanIdRequest(SetCanIdRequest const&) = default;
-      SetCanIdRequest& operator = (SetCanIdRequest const&) = default;
-      SetCanIdRequest(SetCanIdRequest&&) = default;
-      SetCanIdRequest& operator = (SetCanIdRequest&&) = default;
-      using CanIdRequest::CanIdRequest;
-
-      /**\fn getCanId
-       * \brief
-       *    Get the CAN ID of the actuator
-       * 
-       * \return
-       *    The CAN ID of the actuator [1, 32]
-      */
-      [[nodiscard]]
-      std::uint16_t getCanId() const noexcept;
-  };
 
   /**\class SetAccelerationRequest
    * \brief
    *    Request for setting the maximum acceleration/deceleration of the actuator
   */
-  class SetAccelerationRequest: public SingleMotorRequest<CommandType::WRITE_ACCELERATION_TO_RAM_AND_ROM> {
+  class SetAccelerationRequest: public SingleMotorRequest<CommandType::WRITE_ACCELERATION_TO_RAM> {
     public:
       /**\fn SetAccelerationRequest
        * \brief
@@ -151,37 +78,13 @@ namespace myactuator_rmd {
       AccelerationType getMode() const noexcept;
   };
 
-  /**\class SetCanBaudRateRequest
-   * \brief
-   *    Request for setting the Baud rate of the actuator
-  */
-  class SetCanBaudRateRequest: public SingleMotorRequest<CommandType::COMMUNICATION_BAUD_RATE_SETTING> {
-    public:
-      SetCanBaudRateRequest(CanBaudRate const baud_rate);
-      SetCanBaudRateRequest(SetCanBaudRateRequest const&) = default;
-      SetCanBaudRateRequest& operator = (SetCanBaudRateRequest const&) = default;
-      SetCanBaudRateRequest(SetCanBaudRateRequest&&) = default;
-      SetCanBaudRateRequest& operator = (SetCanBaudRateRequest&&) = default;
-      using SingleMotorRequest::SingleMotorRequest;
-
-      /**\fn getBaudRate
-       * \brief
-       *    Get the Baud rate that should be set to the actuator
-       * 
-       * \return
-       *    The Baud rate that the actuator should be using
-      */
-      [[nodiscard]]
-      CanBaudRate getBaudRate() const noexcept;
-  };
-
   /**\class SetEncoderZeroRequest
    * \brief
    *    Request for setting the encoder zero to a given value
   */
   class SetEncoderZeroRequest: public SingleMotorRequest<CommandType::WRITE_ENCODER_MULTI_TURN_VALUE_TO_ROM_AS_ZERO> {
     public:
-      SetEncoderZeroRequest(std::int32_t const encoder_offset);
+      SetEncoderZeroRequest(std::int16_t const encoder_offset);
       SetEncoderZeroRequest(SetEncoderZeroRequest const&) = default;
       SetEncoderZeroRequest& operator = (SetEncoderZeroRequest const&) = default;
       SetEncoderZeroRequest(SetEncoderZeroRequest&&) = default;
@@ -196,7 +99,7 @@ namespace myactuator_rmd {
        *    The encoder zero value
       */
       [[nodiscard]]
-      std::int32_t getEncoderZero() const noexcept;
+      std::int16_t getEncoderZero() const noexcept;
   };
 
   /**\class SetGainsRequest
@@ -238,23 +141,23 @@ namespace myactuator_rmd {
   template <CommandType C>
   constexpr SetGainsRequest<C>::SetGainsRequest(Gains const& gains) noexcept
   : SingleMotorRequest<C>{} {
-    this->data_[2] = gains.current.kp;
-    this->data_[3] = gains.current.ki;
+    this->data_[2] = gains.position.kp;
+    this->data_[3] = gains.position.ki;
     this->data_[4] = gains.speed.kp;
     this->data_[5] = gains.speed.ki;
-    this->data_[6] = gains.position.kp;
-    this->data_[7] = gains.position.ki;
+    this->data_[6] = gains.current.kp;
+    this->data_[7] = gains.current.ki;
     return;
   }
 
   template <CommandType C>
   constexpr Gains SetGainsRequest<C>::getGains() const noexcept {
-    auto const current_kp {this->data_[2]};
-    auto const current_ki {this->data_[3]};
+    auto const position_kp {this->data_[2]};
+    auto const position_ki {this->data_[3]};
     auto const speed_kp {this->data_[4]};
     auto const speed_ki {this->data_[5]};
-    auto const position_kp {this->data_[6]};
-    auto const position_ki {this->data_[7]};
+    auto const current_kp {this->data_[6]};
+    auto const current_ki {this->data_[7]};
     return Gains{current_kp, current_ki, speed_kp, speed_ki, position_kp, position_ki};
   }
 
@@ -305,37 +208,6 @@ namespace myactuator_rmd {
       float getPosition() const noexcept;
   };
 
-  /**\class SetTimeoutRequest
-   * \brief
-   *    Request for setting the communication interruption protection time setting
-  */
-  class SetTimeoutRequest: public SingleMotorRequest<CommandType::COMMUNICATION_INTERRUPTION_PROTECTION_TIME_SETTING> {
-    public:
-      /**\fn SetTimeoutRequest
-       * \brief
-       *    Class constructor
-       * 
-       * \param[in] timeout
-       *    The communication interruption protection time setting in milliseconds, 0 if this feature should be de-activated
-      */
-      SetTimeoutRequest(std::chrono::milliseconds const& timeout);
-      SetTimeoutRequest() = delete;
-      SetTimeoutRequest(SetTimeoutRequest const&) = default;
-      SetTimeoutRequest& operator = (SetTimeoutRequest const&) = default;
-      SetTimeoutRequest(SetTimeoutRequest&&) = default;
-      SetTimeoutRequest& operator = (SetTimeoutRequest&&) = default;
-      using SingleMotorRequest::SingleMotorRequest;
-
-      /**\fn getTimeout
-       * \brief
-       *    Get the communication interruption protection time to be set
-       * 
-       * \return
-       *    The communication interruption protection time to be set
-      */
-      [[nodiscard]]
-      std::chrono::milliseconds getTimeout() const noexcept;
-  };
 
   /**\class SetTorqueRequest
    * \brief
@@ -350,7 +222,7 @@ namespace myactuator_rmd {
        * \param[in] current
        *    The current set-point in Ampere
       */
-      SetTorqueRequest(float const current);
+      SetTorqueRequest(float const current, float const current_constant);
       SetTorqueRequest() = delete;
       SetTorqueRequest(SetTorqueRequest const&) = default;
       SetTorqueRequest& operator = (SetTorqueRequest const&) = default;

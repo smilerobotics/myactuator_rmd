@@ -88,32 +88,11 @@ namespace myactuator_rmd {
       case ErrorCode::NO_ERROR:
         os << " (no error)";
         break;
-      case ErrorCode::MOTOR_STALL:
-        os << " (motor stall)";
-        break;
       case ErrorCode::LOW_VOLTAGE:
         os << " (low voltage)";
         break;
-      case ErrorCode::OVERVOLTAGE:
-        os << " (overvoltage)";
-        break;
-      case ErrorCode::OVERCURRENT:
-        os << " (overcurrent)";
-        break;
-      case ErrorCode::POWER_OVERRUN:
-        os << " (power overrun)";
-        break;
-      case ErrorCode::SPEEDING:
-        os << " (speeding)";
-        break;
-      case ErrorCode::UNSPECIFIED_1: case ErrorCode::UNSPECIFIED_2: case ErrorCode::UNSPECIFIED_3:
-        os << " (unspecified error)";
-        break;
       case ErrorCode::OVERTEMPERATURE:
         os << " (overtemperature)";
-        break;
-      case ErrorCode::ENCODER_CALIBRATION_ERROR:
-        os << " (encoder calibration error)";
         break;
       default:
         os << " (unknown error)";
@@ -132,14 +111,14 @@ namespace myactuator_rmd {
   }
 
   inline std::ostream& operator << (std::ostream& os, MotorStatus1 const& motor_status) noexcept {
-    os << "temperature: " << motor_status.temperature << ", brake released: " << std::boolalpha << motor_status.is_brake_released << 
+    os << "temperature: " << motor_status.temperature << 
           ", voltage: " << motor_status.voltage << ", error code: " << motor_status.error_code;
     return os;
   }
 
   inline std::ostream& operator << (std::ostream& os, MotorStatus2 const& motor_status) noexcept {
     os << "temperature: " << motor_status.temperature << ", current: " << motor_status.current <<
-          ", shaft speed: " << motor_status.shaft_speed << ", shaft angle: " << motor_status.shaft_angle;
+          ", shaft speed: " << motor_status.shaft_speed << ", shaft angle: " << motor_status.shaft_encorder;
     return os;
   }
 

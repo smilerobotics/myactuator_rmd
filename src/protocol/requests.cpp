@@ -13,27 +13,6 @@
 
 namespace myactuator_rmd {
 
-  bool CanIdRequest::isWrite() const noexcept {
-    return (getAs<std::uint8_t>(2) == 0) ? true : false;
-  }
-
-  GetCanIdRequest::GetCanIdRequest()
-  : CanIdRequest{}  {
-    setAt(static_cast<std::uint8_t>(1), 2);
-    return;
-  }
-
-  SetCanIdRequest::SetCanIdRequest(std::uint16_t const can_id)
-  : CanIdRequest{}  {
-    setAt(static_cast<std::uint8_t>(0), 2);
-    setAt(static_cast<std::uint8_t>(can_id), 6);
-    return;
-  }
-
-  std::uint16_t SetCanIdRequest::getCanId() const noexcept {
-    return static_cast<std::uint16_t>(getAs<std::uint8_t>(7));
-  }
-
   SetAccelerationRequest::SetAccelerationRequest(std::uint32_t const acceleration, AccelerationType const mode)
   : SingleMotorRequest{} {
     if ((acceleration != 0) && ((acceleration < 100) || (acceleration > 60000))) {
@@ -49,28 +28,14 @@ namespace myactuator_rmd {
     return getAs<std::uint32_t>(4);
   }
 
-  AccelerationType SetAccelerationRequest::getMode() const noexcept {
-    return static_cast<AccelerationType>(getAs<std::uint8_t>(1));
-  }
-
-  SetCanBaudRateRequest::SetCanBaudRateRequest(CanBaudRate const baud_rate)
-  : SingleMotorRequest{} {
-    setAt(static_cast<std::uint8_t>(baud_rate), 7);
-    return;
-  }
-
-  CanBaudRate SetCanBaudRateRequest::getBaudRate() const noexcept {
-    return static_cast<CanBaudRate>(getAs<std::uint8_t>(7));
-  }
-
-  SetEncoderZeroRequest::SetEncoderZeroRequest(std::int32_t const encoder_offset)
+  SetEncoderZeroRequest::SetEncoderZeroRequest(std::int16_t const encoder_offset)
   : SingleMotorRequest{} {
     setAt(encoder_offset, 4);
     return;
   }
 
-  std::int32_t SetEncoderZeroRequest::getEncoderZero() const noexcept {
-    return getAs<std::int32_t>(4);
+  std::int16_t SetEncoderZeroRequest::getEncoderZero() const noexcept {
+    return getAs<std::int16_t>(6);
   }
 
   SetPositionAbsoluteRequest::SetPositionAbsoluteRequest(float const position, float const max_speed)
@@ -90,25 +55,15 @@ namespace myactuator_rmd {
     return static_cast<float>(getAs<std::int32_t>(4)/100.0f);
   }
 
-  SetTorqueRequest::SetTorqueRequest(float const current)
+  SetTorqueRequest::SetTorqueRequest(float const current, float const current_constant)
   : SingleMotorRequest{} {
-    auto const c {static_cast<std::int16_t>(current/0.01f)};
+    auto const c {static_cast<std::int16_t>(current/current_constant)};
     setAt(c, 4);
     return;
   }
 
   float SetTorqueRequest::getTorqueCurrent() const noexcept {
     return static_cast<float>(getAs<std::int16_t>(4))*0.01f;
-  }
-
-  SetTimeoutRequest::SetTimeoutRequest(std::chrono::milliseconds const& timeout) {
-    setAt(static_cast<std::uint32_t>(timeout.count()), 4);
-    return;
-  }
-
-  std::chrono::milliseconds SetTimeoutRequest::getTimeout() const noexcept {
-    std::chrono::milliseconds const timeout {getAs<std::uint32_t>(4)};
-    return timeout;
   }
 
   SetVelocityRequest::SetVelocityRequest(float const speed)
